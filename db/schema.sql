@@ -40,7 +40,9 @@ CREATE TABLE IF NOT EXISTS jobs (
     -- When the job was published on the source site
     date_posted     TIMESTAMP,
     -- When this record was ingested into the database
-    fetched_at      TIMESTAMP DEFAULT NOW()
+    fetched_at      TIMESTAMP DEFAULT NOW(),
+    -- Array of extracted skill keywords
+    skills          TEXT[]
 );
 
 CREATE INDEX IF NOT EXISTS idx_jobs_external_id ON jobs (external_id);
@@ -51,3 +53,9 @@ FROM information_schema.columns
 WHERE table_schema = 'public'
   AND table_name = 'jobs'
 ORDER BY ordinal_position;
+
+
+-- =============================================
+-- Migration: add skills column (run once if table already exists)
+-- =============================================
+ALTER TABLE jobs ADD COLUMN IF NOT EXISTS skills TEXT[];

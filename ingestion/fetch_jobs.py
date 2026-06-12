@@ -8,15 +8,17 @@ from dateutil import parser as date_parser
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 
+from ingestion.clean_jobs import clean_job
+
 load_dotenv()
 
 INSERT_JOB = text("""
 INSERT INTO jobs (external_id, title, company, location, country,
                   salary_min, salary_max, is_remote, description, url,
-                  date_posted, fetched_at)
+                  date_posted, fetched_at, skills)
 VALUES (:external_id, :title, :company, :location, :country,
         :salary_min, :salary_max, :is_remote, :description, :url,
-        :date_posted, :fetched_at)
+        :date_posted, :fetched_at, :skills)
 ON CONFLICT (external_id) DO NOTHING
 RETURNING external_id
 """)
@@ -65,11 +67,9 @@ def fetch_jobs(keyword="data engineer", country="us", results_per_page=50):
 
 
 def _row_from_job(job: dict) -> dict:
-    title = job.get("title") or ""
-    description = job.get("description") or ""
     area = (job.get("location") or {}).get("area") or []
     created = job.get("created")
-    return {
+    raw = {
         "external_id": str(job.get("id", "")),
         "title": job.get("title"),
         "company": (job.get("company") or {}).get("display_name"),
@@ -77,12 +77,12 @@ def _row_from_job(job: dict) -> dict:
         "country": area[0] if area else None,
         "salary_min": job.get("salary_min"),
         "salary_max": job.get("salary_max"),
-        "is_remote": "remote" in title.lower() or "remote" in description.lower(),
         "description": job.get("description"),
         "url": job.get("redirect_url"),
         "date_posted": date_parser.parse(created) if created else None,
         "fetched_at": datetime.utcnow(),
     }
+    return clean_job(raw)
 
 
 def save_jobs(jobs: list):
@@ -122,5 +122,7 @@ if __name__ == "__main__":
     jobs = fetch_jobs()
     print(f"Jobs returned: {len(jobs)}")
     for job in jobs[:3]:
-        print(f"- {job.get('title', 'N/A')} @ {(job.get('company') or {}).get('display_name', 'N/A')}")
+        row = _row_from_job(job)
+        print(f"- {row['title']} @ {row['company']}")
+        print(f"  Skills: {row['skills']}")
     save_jobs(jobs)
