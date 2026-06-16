@@ -94,7 +94,7 @@ def save_jobs(jobs: list):
     password = os.getenv("DB_PASSWORD")
     if not all([host, port, name, user, password]):
         print("Error: DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD must be set in .env")
-        return
+        return 0, 0
 
     engine = create_engine(f"postgresql://{user}:{password}@{host}:{port}/{name}")
     inserted = skipped = 0
@@ -116,6 +116,7 @@ def save_jobs(jobs: list):
         conn.commit()
 
     print(f"Inserted: {inserted}, Skipped: {skipped}")
+    return inserted, skipped
 
 
 if __name__ == "__main__":

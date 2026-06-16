@@ -1,0 +1,53 @@
+[2026-06-14T17:11:43.728-0700] {processor.py:161} INFO - Started process (PID=49142) to work on /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:11:43.729-0700] {processor.py:830} INFO - Processing file /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py for tasks to queue
+[2026-06-14T17:11:43.729-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:11:43.729-0700] {dagbag.py:545} INFO - Filling up the DagBag from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:11:43.732-0700] {processor.py:840} INFO - DAG(s) 'tutorial' retrieved from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:11:43.794-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:11:43.794-0700] {override.py:1858} INFO - Created Permission View: can delete on DAG:tutorial
+[2026-06-14T17:11:43.798-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:11:43.798-0700] {override.py:1858} INFO - Created Permission View: can edit on DAG:tutorial
+[2026-06-14T17:11:43.800-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:11:43.800-0700] {override.py:1858} INFO - Created Permission View: can read on DAG:tutorial
+[2026-06-14T17:11:43.800-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:11:43.800-0700] {dag.py:3089} INFO - Sync 1 DAGs
+[2026-06-14T17:11:43.804-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:11:43.804-0700] {dag.py:3111} INFO - Creating ORM DAG for tutorial
+[2026-06-14T17:11:43.807-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:11:43.807-0700] {dag.py:3947} INFO - Setting next_dagrun for tutorial to 2026-06-14 00:00:00+00:00, run_after=2026-06-15 00:00:00+00:00
+[2026-06-14T17:11:43.842-0700] {processor.py:183} INFO - Processing /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py took 0.115 seconds
+[2026-06-14T17:13:08.891-0700] {processor.py:161} INFO - Started process (PID=49437) to work on /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:13:08.893-0700] {processor.py:830} INFO - Processing file /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py for tasks to queue
+[2026-06-14T17:13:08.893-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:13:08.893-0700] {dagbag.py:545} INFO - Filling up the DagBag from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:13:08.896-0700] {processor.py:840} INFO - DAG(s) 'tutorial' retrieved from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:13:08.927-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:13:08.927-0700] {dag.py:3089} INFO - Sync 1 DAGs
+[2026-06-14T17:13:08.933-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:13:08.933-0700] {dag.py:3947} INFO - Setting next_dagrun for tutorial to 2026-06-14 00:00:00+00:00, run_after=2026-06-15 00:00:00+00:00
+[2026-06-14T17:13:08.939-0700] {processor.py:183} INFO - Processing /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py took 0.049 seconds
+[2026-06-14T17:14:40.037-0700] {processor.py:161} INFO - Started process (PID=50197) to work on /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:14:40.037-0700] {processor.py:830} INFO - Processing file /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py for tasks to queue
+[2026-06-14T17:14:40.038-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:14:40.038-0700] {dagbag.py:545} INFO - Filling up the DagBag from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:14:40.042-0700] {processor.py:840} INFO - DAG(s) 'tutorial' retrieved from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:14:40.073-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:14:40.073-0700] {dag.py:3089} INFO - Sync 1 DAGs
+[2026-06-14T17:14:40.079-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:14:40.079-0700] {dag.py:3947} INFO - Setting next_dagrun for tutorial to 2026-06-14 00:00:00+00:00, run_after=2026-06-15 00:00:00+00:00
+[2026-06-14T17:14:40.086-0700] {processor.py:183} INFO - Processing /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py took 0.051 seconds
+[2026-06-14T17:16:09.938-0700] {processor.py:161} INFO - Started process (PID=50399) to work on /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:16:09.938-0700] {processor.py:830} INFO - Processing file /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py for tasks to queue
+[2026-06-14T17:16:09.939-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:16:09.939-0700] {dagbag.py:545} INFO - Filling up the DagBag from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:16:09.942-0700] {processor.py:840} INFO - DAG(s) 'tutorial' retrieved from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:16:09.971-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:16:09.971-0700] {dag.py:3089} INFO - Sync 1 DAGs
+[2026-06-14T17:16:09.977-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:16:09.977-0700] {dag.py:3947} INFO - Setting next_dagrun for tutorial to 2026-06-14 00:00:00+00:00, run_after=2026-06-15 00:00:00+00:00
+[2026-06-14T17:16:09.983-0700] {processor.py:183} INFO - Processing /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py took 0.046 seconds
+[2026-06-14T17:17:11.968-0700] {processor.py:161} INFO - Started process (PID=50562) to work on /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:17:11.968-0700] {processor.py:830} INFO - Processing file /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py for tasks to queue
+[2026-06-14T17:17:11.969-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:17:11.969-0700] {dagbag.py:545} INFO - Filling up the DagBag from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:17:11.972-0700] {processor.py:840} INFO - DAG(s) 'tutorial' retrieved from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:17:12.002-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:17:12.002-0700] {dag.py:3089} INFO - Sync 1 DAGs
+[2026-06-14T17:17:12.008-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:17:12.008-0700] {dag.py:3947} INFO - Setting next_dagrun for tutorial to 2026-06-14 00:00:00+00:00, run_after=2026-06-15 00:00:00+00:00
+[2026-06-14T17:17:12.014-0700] {processor.py:183} INFO - Processing /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py took 0.047 seconds
+[2026-06-14T17:18:14.569-0700] {processor.py:161} INFO - Started process (PID=50736) to work on /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:18:14.572-0700] {processor.py:830} INFO - Processing file /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py for tasks to queue
+[2026-06-14T17:18:14.572-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:18:14.572-0700] {dagbag.py:545} INFO - Filling up the DagBag from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:18:14.576-0700] {processor.py:840} INFO - DAG(s) 'tutorial' retrieved from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:18:14.608-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:18:14.608-0700] {dag.py:3089} INFO - Sync 1 DAGs
+[2026-06-14T17:18:14.614-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:18:14.614-0700] {dag.py:3947} INFO - Setting next_dagrun for tutorial to 2026-06-14 00:00:00+00:00, run_after=2026-06-15 00:00:00+00:00
+[2026-06-14T17:18:14.620-0700] {processor.py:183} INFO - Processing /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py took 0.053 seconds
+[2026-06-14T17:19:10.854-0700] {processor.py:161} INFO - Started process (PID=51040) to work on /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:19:10.854-0700] {processor.py:830} INFO - Processing file /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py for tasks to queue
+[2026-06-14T17:19:10.854-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:19:10.854-0700] {dagbag.py:545} INFO - Filling up the DagBag from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:19:10.861-0700] {processor.py:840} INFO - DAG(s) 'tutorial' retrieved from /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py
+[2026-06-14T17:19:10.894-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:19:10.894-0700] {dag.py:3089} INFO - Sync 1 DAGs
+[2026-06-14T17:19:10.901-0700] {logging_mixin.py:188} INFO - [2026-06-14T17:19:10.901-0700] {dag.py:3947} INFO - Setting next_dagrun for tutorial to 2026-06-14 00:00:00+00:00, run_after=2026-06-15 00:00:00+00:00
+[2026-06-14T17:19:10.909-0700] {processor.py:183} INFO - Processing /Users/fatimanaqib/Documents/job-market-tracker/.venv/lib/python3.11/site-packages/airflow/example_dags/tutorial.py took 0.056 seconds
