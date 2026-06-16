@@ -99,7 +99,7 @@ def save_jobs(jobs: list):
     engine = create_engine(f"postgresql://{user}:{password}@{host}:{port}/{name}")
     inserted = skipped = 0
 
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         for job in jobs:
             try:
                 row = _row_from_job(job)
@@ -113,8 +113,6 @@ def save_jobs(jobs: list):
                     skipped += 1
             except Exception as exc:
                 print(f"Error inserting job {job.get('id', 'unknown')}: {exc}")
-        conn.commit()
-
     print(f"Inserted: {inserted}, Skipped: {skipped}")
     return inserted, skipped
 

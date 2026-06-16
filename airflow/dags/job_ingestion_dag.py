@@ -44,7 +44,7 @@ def log_summary(**context):
         f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
         f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
     )
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         row = conn.execute(
             text("SELECT COUNT(*) AS total, MAX(fetched_at) AS last_fetched FROM jobs")
         ).fetchone()
