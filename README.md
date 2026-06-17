@@ -1,13 +1,14 @@
 # Job Market Tracker
 
-A data pipeline that ingests job postings from the Adzuna API, stores them in PostgreSQL, and supports SQL-based market analysis.
+A data pipeline that ingests job postings from the Adzuna API, stores them in PostgreSQL, and supports SQL-based market analysis with a Streamlit dashboard.
 
 ## What it does
 
 - Fetches live job postings from the Adzuna API by keyword and country
 - Maps API fields to a PostgreSQL `jobs` table and inserts records with deduplication on `external_id`
 - Skips duplicate listings on re-runs using `ON CONFLICT DO NOTHING`
-- Includes ready-to-run SQL queries for company, location, salary, and posting trends
+- Extracts skills from job descriptions and supports trend analysis via SQL
+- Visualizes market insights in an interactive Streamlit dashboard
 
 ## Tech stack
 
@@ -15,7 +16,9 @@ A data pipeline that ingests job postings from the Adzuna API, stores them in Po
 - PostgreSQL
 - SQLAlchemy
 - Apache Airflow
-- Streamlit (coming soon)
+- Streamlit
+- Plotly
+- Pandas
 
 ## Project structure
 
@@ -25,18 +28,21 @@ job-market-tracker/
 │   └── dags/
 │       ├── __init__.py             # Package marker for Airflow DAGs
 │       └── job_ingestion_dag.py    # Daily scheduled job ingestion DAG
+├── dashboard/
+│   ├── __init__.py                 # Package marker for the dashboard module
+│   └── app.py                      # Streamlit dashboard (metrics, charts, job table)
 ├── db/
-│   ├── schema.sql          # PostgreSQL database and jobs table definition
-│   ├── queries.sql         # Analytical queries against the jobs table
-│   └── analysis.sql        # Advanced SQL analysis with CTEs and window functions
+│   ├── schema.sql                  # PostgreSQL database and jobs table definition
+│   ├── queries.sql                 # Analytical queries against the jobs table
+│   └── analysis.sql                # Advanced SQL analysis with CTEs and window functions
 ├── ingestion/
-│   ├── __init__.py         # Package marker for the ingestion module
-│   ├── fetch_jobs.py       # Adzuna API fetch and PostgreSQL insert logic
-│   └── clean_jobs.py       # Data cleaning and skill extraction utilities
-├── .env.example            # Template for environment variables
-├── .gitignore              # Ignores secrets, virtual env, and Python cache files
-├── requirements.txt        # Python dependencies
-└── README.md               # Project documentation
+│   ├── __init__.py                 # Package marker for the ingestion module
+│   ├── fetch_jobs.py               # Adzuna API fetch and PostgreSQL insert logic
+│   └── clean_jobs.py               # Data cleaning and skill extraction utilities
+├── .env.example                    # Template for environment variables
+├── .gitignore                      # Ignores secrets, virtual env, and Python cache files
+├── requirements.txt                # Python dependencies
+└── README.md                       # Project documentation
 ```
 
 ## Setup
@@ -60,6 +66,19 @@ source .venv/bin/activate   # macOS / Linux
 
 ```bash
 pip install -r requirements.txt
+```
+
+**macOS Apple Silicon (M1/M2) with Python 3.9:** If you see a `google-re2` build error, install Airflow with the official constraints file:
+
+```bash
+pip install "apache-airflow>=2.9.0,<3.0" \
+  --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.9.3/constraints-3.9.txt"
+```
+
+Then install the remaining dependencies:
+
+```bash
+pip install requests psycopg2-binary sqlalchemy python-dotenv python-dateutil streamlit plotly pandas
 ```
 
 ### d. Configure environment variables
@@ -97,6 +116,24 @@ psql -U postgres -d job_tracker -f db/schema.sql
 ```bash
 python -m ingestion.fetch_jobs
 ```
+
+## Streamlit dashboard
+
+With your virtual environment activated and `.env` configured, start the dashboard from the project root:
+
+```bash
+streamlit run dashboard/app.py
+```
+
+Open the app in your browser (default: [http://localhost:8501](http://localhost:8501)).
+
+The dashboard shows:
+
+- Total jobs, unique companies, remote job percentage, and average salary
+- Top 15 in-demand skills (horizontal bar chart)
+- Remote vs on-site split (donut chart)
+- Top 10 hiring companies (horizontal bar chart)
+- Searchable table of the latest 100 job postings
 
 ## Airflow scheduling
 
@@ -197,7 +234,7 @@ psql -U postgres -d job_tracker -f db/queries.sql
 - [x] Phase 2: Data cleaning + skill extraction
 - [x] Phase 3: SQL trend analysis
 - [x] Phase 4: Apache Airflow scheduling
-- [ ] Phase 5: Streamlit dashboard
+- [x] Phase 5: Streamlit dashboard
 
 ---
 
