@@ -47,6 +47,30 @@ CREATE TABLE IF NOT EXISTS jobs (
 
 CREATE INDEX IF NOT EXISTS idx_jobs_external_id ON jobs (external_id);
 
+CREATE TABLE IF NOT EXISTS ingestion_runs (
+    -- Unique identifier for each ingestion attempt
+    run_id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    -- Search keyword used for this run
+    keyword         VARCHAR(255) NOT NULL,
+    -- Jobs returned by the source API
+    fetched_count   INTEGER NOT NULL DEFAULT 0,
+    -- New rows written to jobs
+    inserted_count  INTEGER NOT NULL DEFAULT 0,
+    -- Duplicate external_id rows skipped
+    skipped_count   INTEGER NOT NULL DEFAULT 0,
+    -- Rows that could not be inserted
+    failed_count    INTEGER NOT NULL DEFAULT 0,
+    -- running | success | partial | failed
+    status          VARCHAR(20) NOT NULL,
+    -- When the run started
+    started_at      TIMESTAMP NOT NULL DEFAULT NOW(),
+    -- When the run finished (NULL while running)
+    completed_at    TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_ingestion_runs_keyword ON ingestion_runs (keyword);
+CREATE INDEX IF NOT EXISTS idx_ingestion_runs_started_at ON ingestion_runs (started_at);
+
 -- Verify the table was created
 SELECT column_name, data_type, is_nullable
 FROM information_schema.columns
@@ -59,3 +83,20 @@ ORDER BY ordinal_position;
 -- Migration: add skills column (run once if table already exists)
 -- =============================================
 ALTER TABLE jobs ADD COLUMN IF NOT EXISTS skills TEXT[];
+
+-- =============================================
+-- Migration: ingestion_runs table (run once if table already exists)
+-- =============================================
+CREATE TABLE IF NOT EXISTS ingestion_runs (
+    run_id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    keyword         VARCHAR(255) NOT NULL,
+    fetched_count   INTEGER NOT NULL DEFAULT 0,
+    inserted_count  INTEGER NOT NULL DEFAULT 0,
+    skipped_count   INTEGER NOT NULL DEFAULT 0,
+    failed_count    INTEGER NOT NULL DEFAULT 0,
+    status          VARCHAR(20) NOT NULL,
+    started_at      TIMESTAMP NOT NULL DEFAULT NOW(),
+    completed_at    TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_ingestion_runs_keyword ON ingestion_runs (keyword);
+CREATE INDEX IF NOT EXISTS idx_ingestion_runs_started_at ON ingestion_runs (started_at);

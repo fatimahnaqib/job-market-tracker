@@ -1,6 +1,5 @@
 """Daily job market ingestion DAG."""
 
-import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -8,13 +7,18 @@ from pathlib import Path
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 load_dotenv(PROJECT_ROOT / ".env")
 
-from ingestion.fetch_jobs import fetch_jobs, save_jobs
+from ingestion.db import get_engine
+from ingestion.fetch_jobs import ingest_keyword
+from ingestion.logging_config import get_logger, setup_logging
+
+setup_logging()
+logger = get_logger(__name__)
 
 KEYWORDS = [
     "data engineer",
@@ -29,26 +33,34 @@ def fetch_and_store(**context):
     total_inserted = 0
     for keyword in KEYWORDS:
         try:
-            jobs = fetch_jobs(keyword=keyword)
-            inserted, _ = save_jobs(jobs)
-            total_inserted += inserted
-            print(f"{keyword}: fetched {len(jobs)}, inserted {inserted}")
-        except Exception as exc:
-            print(f"Error processing '{keyword}': {exc}")
-    print(f"Total inserted across all keywords: {total_inserted}")
+            result = ingest_keyword(keyword=keyword)
+            total_inserted += result["inserted"]
+            logger.info(
+                "%s: fetched %d, inserted %d, skipped %d, failed %d (status=%s)",
+                keyword,
+                result["fetched"],
+                result["inserted"],
+                result["skipped"],
+                result["failed"],
+                result["status"],
+            )
+        except Exception:
+            logger.exception("Error processing '%s'", keyword)
+    logger.info("Total inserted across all keywords: %d", total_inserted)
 
 
 def log_summary(**context):
     """Query PostgreSQL and log total job count and latest fetch timestamp."""
-    engine = create_engine(
-        f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
-        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
-    )
+    engine = get_engine()
     with engine.begin() as conn:
         row = conn.execute(
             text("SELECT COUNT(*) AS total, MAX(fetched_at) AS last_fetched FROM jobs")
         ).fetchone()
-    print(f"Ingestion summary — total jobs: {row.total}, last fetched: {row.last_fetched}")
+    logger.info(
+        "Ingestion summary — total jobs: %s, last fetched: %s",
+        row.total,
+        row.last_fetched,
+    )
 
 
 with DAG(

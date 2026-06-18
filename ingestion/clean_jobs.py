@@ -4,6 +4,10 @@ from __future__ import annotations
 
 import re
 
+from ingestion.logging_config import get_logger, setup_logging
+
+logger = get_logger(__name__)
+
 SKILLS = (
     "python", "sql", "spark", "kafka", "airflow", "aws", "gcp", "azure",
     "docker", "kubernetes", "postgresql", "mysql", "snowflake", "dbt",
@@ -73,6 +77,7 @@ def clean_job(row: dict) -> dict:
 
 
 if __name__ == "__main__":
+    setup_logging()
     samples = [
         {
             "title": "  senior data engineer - Remote  ",
@@ -90,8 +95,7 @@ if __name__ == "__main__":
         },
     ]
     for i, job in enumerate(samples, 1):
-        print(f"--- Sample {i} (before) ---")
-        print(job)
-        print(f"--- Sample {i} (after) ---")
-        print(clean_job(job))
-        print()
+        logger.info("--- Sample %d (before) ---", i)
+        logger.info("%s", job)
+        logger.info("--- Sample %d (after) ---", i)
+        logger.info("%s", clean_job(job))
