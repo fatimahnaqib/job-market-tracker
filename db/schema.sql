@@ -71,7 +71,20 @@ CREATE TABLE IF NOT EXISTS ingestion_runs (
 CREATE INDEX IF NOT EXISTS idx_ingestion_runs_keyword ON ingestion_runs (keyword);
 CREATE INDEX IF NOT EXISTS idx_ingestion_runs_started_at ON ingestion_runs (started_at);
 
--- Verify the table was created
+CREATE TABLE IF NOT EXISTS watched_keywords (
+    id          SERIAL PRIMARY KEY,
+    keyword     VARCHAR(255) UNIQUE NOT NULL,
+    created_at  TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+INSERT INTO watched_keywords (keyword) VALUES
+    ('data engineer'),
+    ('data analyst'),
+    ('machine learning engineer'),
+    ('backend engineer')
+ON CONFLICT (keyword) DO NOTHING;
+
+-- Verify the jobs table was created
 SELECT column_name, data_type, is_nullable
 FROM information_schema.columns
 WHERE table_schema = 'public'
@@ -100,3 +113,19 @@ CREATE TABLE IF NOT EXISTS ingestion_runs (
 );
 CREATE INDEX IF NOT EXISTS idx_ingestion_runs_keyword ON ingestion_runs (keyword);
 CREATE INDEX IF NOT EXISTS idx_ingestion_runs_started_at ON ingestion_runs (started_at);
+
+-- =============================================
+-- Migration: watched search terms for scheduled ingest
+-- =============================================
+CREATE TABLE IF NOT EXISTS watched_keywords (
+    id          SERIAL PRIMARY KEY,
+    keyword     VARCHAR(255) UNIQUE NOT NULL,
+    created_at  TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+INSERT INTO watched_keywords (keyword) VALUES
+    ('data engineer'),
+    ('data analyst'),
+    ('machine learning engineer'),
+    ('backend engineer')
+ON CONFLICT (keyword) DO NOTHING;

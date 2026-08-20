@@ -18,6 +18,25 @@ INSERT INTO ingestion_runs (run_id, keyword, status, started_at)
 VALUES (:run_id, :keyword, 'running', :started_at)
 """)
 
+LIST_WATCHED_KEYWORDS = text("""
+SELECT keyword
+FROM watched_keywords
+ORDER BY keyword
+""")
+
+ADD_WATCHED_KEYWORD = text("""
+INSERT INTO watched_keywords (keyword)
+VALUES (:keyword)
+ON CONFLICT (keyword) DO NOTHING
+RETURNING keyword
+""")
+
+DELETE_WATCHED_KEYWORD = text("""
+DELETE FROM watched_keywords
+WHERE keyword = :keyword
+RETURNING keyword
+""")
+
 COMPLETE_RUN = text("""
 UPDATE ingestion_runs
 SET fetched_count = :fetched_count,
@@ -91,3 +110,46 @@ def complete_ingestion_run(
         skipped_count,
         failed_count,
     )
+
+
+def normalize_keyword(keyword: str) -> str:
+    """Trim whitespace and lowercase a search term."""
+    return " ".join((keyword or "").split()).lower()
+
+
+def get_watched_keywords(engine: Engine | None = None) -> list[str]:
+    """Return tracked Adzuna search terms, sorted alphabetically."""
+    engine = engine or get_engine()
+    with engine.connect() as conn:
+        rows = conn.execute(LIST_WATCHED_KEYWORDS).fetchall()
+    return [row.keyword for row in rows]
+
+
+def add_watched_keyword(keyword: str, engine: Engine | None = None) -> str | None:
+    """Insert a search term if it is new. Returns the stored keyword, or None if it already exists."""
+    normalized = normalize_keyword(keyword)
+    if not normalized:
+        raise ValueError("keyword must not be empty")
+    engine = engine or get_engine()
+    with engine.begin() as conn:
+        row = conn.execute(ADD_WATCHED_KEYWORD, {"keyword": normalized}).fetchone()
+    if row:
+        logger.info("Added watched keyword '%s'", normalized)
+        return row.keyword
+    logger.info("Watched keyword '%s' already exists", normalized)
+    return None
+
+
+def remove_watched_keyword(keyword: str, engine: Engine | None = None) -> bool:
+    """Delete a tracked search term. Returns True if a row was removed."""
+    normalized = normalize_keyword(keyword)
+    if not normalized:
+        raise ValueError("keyword must not be empty")
+    engine = engine or get_engine()
+    with engine.begin() as conn:
+        row = conn.execute(DELETE_WATCHED_KEYWORD, {"keyword": normalized}).fetchone()
+    if row:
+        logger.info("Removed watched keyword '%s'", normalized)
+        return True
+    logger.info("Watched keyword '%s' was not found", normalized)
+    return False

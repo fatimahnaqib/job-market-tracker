@@ -1,12 +1,25 @@
 # Run with: streamlit run dashboard/app.py
 
 import os
+import sys
+from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from ingestion.db import (
+    add_watched_keyword,
+    get_watched_keywords,
+    remove_watched_keyword,
+)
+from ingestion.fetch_jobs import ingest_keyword
 
 load_dotenv()
 st.set_page_config(
@@ -104,6 +117,25 @@ def format_salary(value):
     return f"${value:,.0f}"
 
 
+def _flash(kind: str, message: str) -> None:
+    st.session_state["flash"] = (kind, message)
+
+
+def _show_flash() -> None:
+    flash = st.session_state.pop("flash", None)
+    if not flash:
+        return
+    kind, message = flash
+    if kind == "success":
+        st.success(message)
+    elif kind == "info":
+        st.info(message)
+    elif kind == "warning":
+        st.warning(message)
+    else:
+        st.error(message)
+
+
 # Sidebar
 with st.sidebar:
     st.title("📊 Job Market Tracker")
@@ -112,6 +144,74 @@ with st.sidebar:
     last_updated = fetch_last_updated()
     st.metric("Total Jobs", f"{total_jobs:,}")
     st.metric("Last Updated", last_updated.strftime("%Y-%m-%d %H:%M") if pd.notna(last_updated) else "N/A")
+
+    st.divider()
+    st.subheader("Tracked searches")
+    st.caption("Airflow ingests each term on the daily run. Fetch now pulls that term immediately.")
+    _show_flash()
+
+    try:
+        watched = get_watched_keywords()
+    except Exception as exc:
+        watched = []
+        st.error(f"Could not load watched keywords: {exc}")
+
+    if watched:
+        st.write(", ".join(watched))
+    else:
+        st.warning("No search terms yet. Add one below.")
+
+    with st.form("add_watched_keyword"):
+        new_keyword = st.text_input("Add a role", placeholder="e.g. product analyst")
+        add_clicked = st.form_submit_button("Add")
+    if add_clicked:
+        try:
+            added = add_watched_keyword(new_keyword)
+            if added:
+                _flash("success", f"Now tracking '{added}'.")
+            else:
+                _flash("info", "That search is already tracked.")
+            st.rerun()
+        except ValueError as exc:
+            _flash("warning", str(exc))
+            st.rerun()
+        except Exception as exc:
+            _flash("error", str(exc))
+            st.rerun()
+
+    if watched:
+        selected = st.selectbox("Fetch or remove", watched, key="watched_select")
+        fetch_col, remove_col = st.columns(2)
+        with fetch_col:
+            fetch_clicked = st.button("Fetch now", use_container_width=True)
+        with remove_col:
+            remove_clicked = st.button("Remove", use_container_width=True)
+
+        if fetch_clicked:
+            with st.spinner(f"Fetching jobs for '{selected}'..."):
+                try:
+                    result = ingest_keyword(selected)
+                    st.cache_data.clear()
+                    _flash(
+                        "success",
+                        f"{selected}: fetched {result['fetched']}, "
+                        f"inserted {result['inserted']}, "
+                        f"updated {result['updated']}, "
+                        f"skipped {result['skipped']}",
+                    )
+                    st.rerun()
+                except Exception as exc:
+                    _flash("error", str(exc))
+                    st.rerun()
+
+        if remove_clicked:
+            if len(watched) <= 1:
+                _flash("warning", "Keep at least one search term so the daily DAG has work to do.")
+                st.rerun()
+            else:
+                remove_watched_keyword(selected)
+                _flash("success", f"Stopped tracking '{selected}'.")
+                st.rerun()
 
 st.title("Job Market Intelligence Tracker")
 st.subheader("Insights from live job postings")
